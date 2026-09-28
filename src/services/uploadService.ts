@@ -3,13 +3,27 @@ import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
 
+// dotenv.config();
+
+// // Configure Cloudinary
+// cloudinary.config({
+//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
+//   api_key: process.env.CLOUDINARY_API_KEY || '',
+//   api_secret: process.env.CLOUDINARY_API_SECRET || '',
+// });
+
 dotenv.config();
+
+// Trim any hidden whitespace from env variables
+const cloudName = (process.env.CLOUDINARY_CLOUD_NAME || 'kt0lwlhz').trim();
+const apiKey = (process.env.CLOUDINARY_API_KEY || '').trim();
+const apiSecret = (process.env.CLOUDINARY_API_SECRET || '').trim();
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
-  api_key: process.env.CLOUDINARY_API_KEY || '',
-  api_secret: process.env.CLOUDINARY_API_SECRET || '',
+  cloud_name: cloudName,
+  api_key: apiKey,
+  api_secret: apiSecret,
 });
 
 // Ensure local upload folder exists for fallback
@@ -26,17 +40,23 @@ export async function uploadImageBuffer(
   folder = 'ai_political_posters',
   filenamePrefix = 'poster'
 ): Promise<string> {
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  const apiKey = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+  // const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  // const apiKey = process.env.CLOUDINARY_API_KEY;
+  // const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+  // const hasCloudinary =
+  //   cloudName &&
+  //   apiKey &&
+  //   apiSecret &&
+  //   !cloudName.includes('your_') &&
+  //   cloudName.trim() !== '';
 
   const hasCloudinary =
-    cloudName &&
-    apiKey &&
-    apiSecret &&
-    !cloudName.includes('your_') &&
-    cloudName.trim() !== '';
-
+  cloudName &&
+  apiKey &&
+  apiSecret &&
+  !cloudName.includes('your_') &&
+  cloudName !== '';
   if (hasCloudinary) {
     try {
       const uploadResult = await new Promise<any>((resolve, reject) => {
